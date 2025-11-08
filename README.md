@@ -1,39 +1,39 @@
-# <h1 align="center"> Forge Template </h1>
+# 🔗 EVM Token Bridge
 
-**Template repository for getting started quickly with Foundry projects**
+A lightweight **EVM-to-EVM token bridge** that enables secure transfer of tokens across chains using a **Lock → Mint → Burn → Unlock** mechanism.  
+Built with Solidity, OpenZeppelin, and a role-gated relayer model for secure message passing.
 
-![Github Actions](https://github.com/foundry-rs/forge-template/workflows/CI/badge.svg)
+---
 
-## Getting Started
+## ✨ Features
 
-Click "Use this template" on [GitHub](https://github.com/foundry-rs/forge-template) to create a new repository with this repo as the initial state.
+- 🔒 **Lock & Unlock** tokens on the canonical chain  
+- 🪙 **Mint & Burn** wrapped tokens on the destination chain  
+- 🚫 **Replay-protected** message execution  
+- 🧑‍⚖️ **Role-based access** for relayers + admins  
+- ⏸️ **Pausable & Secure** (Reentrancy-safe)  
+- ✅ Works for any ERC-20 token  
 
-Or, if your repo already exists, run:
-```sh
-forge init
-forge build
-forge test
-```
+---
 
-## Writing your first test
+## 🧠 How It Works
 
-All you need is to `import forge-std/Test.sol` and then inherit it from your test contract. Forge-std's Test contract comes with a pre-instatiated [cheatcodes environment](https://book.getfoundry.sh/cheatcodes/), the `vm`. It also has support for [ds-test](https://book.getfoundry.sh/reference/ds-test.html)-style logs and assertions. Finally, it supports Hardhat's [console.log](https://github.com/brockelmore/forge-std/blob/master/src/console.sol). The logging functionalities require `-vvvv`.
+| Chain A (Source) | Chain B (Destination) |
+|------------------|------------------------|
+| User deposits tokens → locked in bridge | Relayer mints wrapped tokens to recipient |
+| Later: User burns wrapped tokens | Relayer releases original locked tokens |
 
-```solidity
-pragma solidity 0.8.10;
+---
 
-import "forge-std/Test.sol";
+## 🏗️ Architecture
 
-contract ContractTest is Test {
-    function testExample() public {
-        vm.roll(100);
-        console.log(1);
-        emit log("hi");
-        assertTrue(true);
-    }
-}
-```
+Contracts included:
 
-## Development
+| Contract | Role |
+|----------|-------|
+| `INR.sol` | ERC-20 canonical token on source chain |
+| `WINR.sol` | Wrapped token on destination chain |
+| `BridgeBase.sol` | Core bridging logic (shared) |
+| `BridgeETH.sol` | Implementation for both sides (mintable or lockable) |
 
-This project uses [Foundry](https://getfoundry.sh). See the [book](https://book.getfoundry.sh/getting-started/installation.html) for instructions on how to install and use Foundry.
+---
